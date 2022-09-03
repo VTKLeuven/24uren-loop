@@ -7,7 +7,26 @@ This is the repository of the 24-hour run app of VTK vzw. The app is based on a 
    
 If you find a problem with or have additions to this guide, don't hesitate to open a ticket.
  
-[[_TOC_]] 
+- [Features](#features)
+  * [General information](#general-information)
+  * [Views](#views)
+  * [Admin](#admin)
+- [Installation](#installation)
+  * [Development](#development)
+  * [Production](#production)
+  * [Configuring HTTPS](#configuring-https)
+  * [Database initialisation and migrations](#database-initialisation-and-migrations)
+  * [Environment file](#environment-file)
+  * [Build arguments](#build-arguments)
+- [Permissions](#permissions)
+- [Development](#development-1)
+  * [Backend](#backend)
+  * [Frontend](#frontend)
+- [Useful commands](#useful-commands)
+  * [Docker](#docker)
+  * [Database](#database)
+  * [Production](#production-1)
+  * [Development](#development-2)
 
 ## Features
 The front-end of the application consists of a couple of views (some of which are only visible when having the
