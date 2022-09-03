@@ -1,0 +1,53 @@
+FROM nikolaik/python-nodejs:python3.8-nodejs14-alpine
+
+# Fetch repository updates and install extra packages
+RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev libffi-dev openssl-dev
+
+# Create the app user
+ENV HOME=/home/app
+RUN addgroup -S app && adduser -S app -G app --shell /bin/sh --home $HOME
+ENV PATH="$HOME/.local/bin:${PATH}"
+
+# Create the appropriate directories
+ENV APP_HOME="${HOME}/web"
+ENV APP_VUE_HOME="${APP_HOME}/competition/vue-app"
+ENV APP_STATIC="${APP_HOME}/static"
+RUN mkdir -p $HOME $APP_HOME $APP_VUE_HOME $APP_STATIC
+WORKDIR $APP_HOME
+
+# Fix Permissions
+RUN chown app:app $HOME $APP_HOME $APP_VUE_HOME $APP_STATIC
+USER app
+
+# Install requirements
+COPY --chown=app requirements.txt $APP_HOME
+RUN pip install -r $APP_HOME/requirements.txt
+
+# Install daphne
+RUN pip install daphne
+
+# Install npm modules
+COPY --chown=app ./competition/vue-app/package.json $APP_VUE_HOME
+RUN npm install --prefix $APP_VUE_HOME $APP_VUE_HOME --loglevel=error
+
+# Set the front-end build variables
+ARG SERVER_URL
+ENV VUE_APP_SERVER_URL=$SERVER_URL
+ARG HTTPS
+ENV VUE_APP_HTTPS=$HTTPS
+ARG SERVER_PORT
+ENV VUE_APP_SERVER_PORT=$SERVER_PORT
+ARG TITLE
+ENV VUE_APP_TITLE=$TITLE
+
+# Build the front-end
+WORKDIR $APP_VUE_HOME
+COPY --chown=app ./competition/vue-app .
+RUN npm run build
+WORKDIR $APP_HOME
+
+# Copy the rest of the project
+COPY --chown=app . .
+
+# Run the entrypoint
+ENTRYPOINT ["/home/app/web/docker/docker-entry.prod.sh"]

@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.prod
+      args:
+        SERVER_URL: 192.168.57.3
+        SERVER_PORT: 1337
+        HTTPS: 0
+        TITLE: "VTK 24u"
+    command: daphne it24u.asgi:application -b 0.0.0.0 -p 8000
+    volumes:
+      - static:/home/app/web/static
+    expose:
+      - 8000
+    env_file:
+      - docker/.env.prod
+    depends_on:
+      - db
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.prod
+      args:
+        SERVER_URL: 192.168.57.3
+        SERVER_PORT: 1337
+        HTTPS: 0
+        TITLE: "VTK 24u"
+    command: python manage.py runworker channels competition
+    env_file:
+      - docker/.env.prod
+  db:
+    image: postgres:9.6-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - docker/.env.db.prod
+  redis:
+    image: redis:alpine3.12
+    expose:
+      - 6379
+
+volumes:
+  postgres_data:
+  static:

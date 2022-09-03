@@ -1,0 +1,28 @@
+FROM nikolaik/python-nodejs:python3.8-nodejs14-alpine
+
+# Initialisation
+ENV HOME=/usr/src/app
+ENV APP_VUE_HOME=$HOME/competition/vue-app
+RUN mkdir $HOME -p
+RUN mkdir $APP_VUE_HOME -p
+WORKDIR $APP_VUE_HOME
+
+# Set front-end variables
+ARG SERVER_URL
+ENV VUE_APP_SERVER_URL=$SERVER_URL
+ARG HTTPS
+ENV VUE_APP_HTTPS=$HTTPS
+ARG SERVER_PORT
+ENV VUE_APP_SERVER_PORT=$SERVER_PORT
+ARG TITLE
+ENV VUE_APP_TITLE=$TITLE
+
+# Copy the front-end
+COPY ./competition/vue-app $APP_VUE_HOME
+
+# Copy the entrypoint
+COPY ./docker/docker-entry.dev.front.sh $HOME/docker/
+
+# Run the entrypoint
+ENTRYPOINT ["/usr/src/app/docker/docker-entry.dev.front.sh"]
+

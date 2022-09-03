@@ -1,0 +1,24 @@
+FROM nikolaik/python-nodejs:python3.8-nodejs14-alpine
+
+# Fetch repository updates and install extra packages
+RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev libffi-dev openssl-dev
+
+# Initialisation
+ENV HOME=/usr/src
+ENV APP_HOME=$HOME/app
+RUN mkdir $HOME $APP_HOME -p
+WORKDIR $APP_HOME
+
+# Make sure all python prints go straight to the output
+ENV PYTHONUNBUFFERED 1
+
+# Install requirements
+COPY requirements.txt $APP_HOME
+RUN pip install -r $APP_HOME/requirements.txt
+
+# Copy the rest of the project
+COPY . $APP_HOME
+
+# Run the entrypoint
+ENTRYPOINT ["/usr/src/app/docker/docker-entry.dev.back.sh"]
+

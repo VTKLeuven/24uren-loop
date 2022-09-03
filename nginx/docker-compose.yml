@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  nginx:
+    build: .
+    volumes:
+      - 24u_static:/home/app/web/24u/static
+      - ./certbot/conf:/etc/nginx/ssl
+      - ./certbot/data:/var/www/certbot
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - default
+      - 24u
+  certbot:
+    image: certbot/certbot:latest
+    command: certonly --webroot --webroot-path=/var/www/certbot --email it@vtk.be --agree-tos --no-eff-email -d 24u.vtk.be
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/logs:/var/log/letsencrypt
+      - ./certbot/data:/var/www/certbot
+volumes:
+  24u_static:
+    external:
+      name: 24u_static
+
+networks:
+  24u:
+    external:
+      name: 24u_default

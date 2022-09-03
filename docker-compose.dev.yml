@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  web-backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev.back
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./:/usr/src/app/
+    ports:
+      - 8000:8000
+    env_file:
+      - docker/.env.dev
+    depends_on:
+      - db
+      - web-frontend
+  web-frontend:
+    env_file:
+      - docker/.env.dev
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev.front
+      args:
+        SERVER_PORT: 8000
+        HTTPS: 0
+        TITLE: "VTK 24u"
+    command: npm run serve
+    volumes:
+      - ./competition/vue-app/:/usr/src/app/competition/vue-app/
+    ports:
+      - 8080:8080
+
+  db:
+    image: postgres:9.6-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - docker/.env.db.dev
+
+volumes:
+  postgres_data:

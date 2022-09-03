@@ -1,0 +1,17 @@
+$font-dir: "~@/assets/fonts/GT_Sectra_Display_Super";
+@font-face {
+  font-family: "GT Sectra Display Super";
+  src: url("#{$font-dir}/8f5d911213d308eb53739263c41e6b6f.eot"); /* IE9*/
+  src: url("#{$font-dir}/8f5d911213d308eb53739263c41e6b6f.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+       url("#{$font-dir}/8f5d911213d308eb53739263c41e6b6f.woff2") format("woff2"), /* chrome、firefox */
+       url("#{$font-dir}/8f5d911213d308eb53739263c41e6b6f.woff") format("woff"), /* chrome、firefox */
+       url("#{$font-dir}/8f5d911213d308eb53739263c41e6b6f.ttf") format("truetype"), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+       url("#{$font-dir}/8f5d911213d308eb53739263c41e6b6f.svg#GT Sectra Display Super") format("svg"); /* iOS 4.1- */
+}
+
+$body-font-family: 'Work Sans', regular;
+$heading-font-family: 'GT Sectra Display Super';
+
+$material-light: (
+  'background': #ECEAEE
+);
