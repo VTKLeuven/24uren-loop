@@ -366,6 +366,12 @@ The frontend is written using the VueJS framework. For a general tutorial, look 
   only take over the server functionality and completely rewrite the look of the component.
 
 
+## Commands to start Development version
+ Build docker image: `sudo docker-compose -f docker-compose.dev.yml build`
+ Boot the development server: `sudo docker-compose -f docker-compose.dev.yml up -d`
+ Shut down container gracefully: `sudo docker-compose -f docker-compose.dev.yml down`
+ Before first time: To Do
+
 ## Useful commands
 
 ### Docker
