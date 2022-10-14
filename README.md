@@ -22,6 +22,7 @@ If you find a problem with or have additions to this guide, don't hesitate to op
 - [Development](#development-1)
   * [Backend](#backend)
   * [Frontend](#frontend)
+- [Commands to start](#commands-to-start-Development-version)
 - [Useful commands](#useful-commands)
   * [Docker](#docker)
   * [Database](#database)
