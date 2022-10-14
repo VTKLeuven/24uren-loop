@@ -367,15 +367,15 @@ The frontend is written using the VueJS framework. For a general tutorial, look 
 
 
 ## Commands to start Development version
- Build docker image: `sudo docker-compose -f docker-compose.dev.yml build`
- Boot the development server: `sudo docker-compose -f docker-compose.dev.yml up -d`
- Shut down container gracefully: `sudo docker-compose -f docker-compose.dev.yml down`
- If first time on new machine, you also have to set up the database:
- Open a terminal in container: `sudo docker exec -it <docker_backend_container_name> sh` ## The backend container probably has a name similar to 24uren-loop_web-backend-1
- Initialize database, or after changes: `python manage.py migrate`
- Initialize common app data: `python manage.py competition_init`
- Create an admin user with username: admin and password: admin: `python manage.py init_users`
- If you want to create some dummy data: `python manage.py competition_create_dummy_data`
+ - Build docker image: `sudo docker-compose -f docker-compose.dev.yml build`
+ - Boot the development server: `sudo docker-compose -f docker-compose.dev.yml up -d`
+ - Shut down container gracefully: `sudo docker-compose -f docker-compose.dev.yml down`
+ - If first time on new machine, you also have to set up the database:
+ - Open a terminal in container: `sudo docker exec -it <docker_backend_container_name> sh` ## The backend container probably has a name similar to 24uren-loop_web-backend-1
+ - Initialize database, or after changes: `python manage.py migrate`
+ - Initialize common app data: `python manage.py competition_init`
+ - Create an admin user with username: admin and password: admin: `python manage.py init_users`
+ - If you want to create some dummy data: `python manage.py competition_create_dummy_data`
  
  After these steps, the frontend website is running on localhost:8080, the backend website is running on localhost:8000. To access the admin page, you can go to localhost:8000/admin.
 
