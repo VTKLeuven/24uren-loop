@@ -9,7 +9,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <queue :range-from="0" :range-to="17" dense :lg="11" :md="11" :sm="11"/>
+                    <queue :range-from="0" :range-to="25" dense :lg="11" :md="11" :sm="11"/>
                 </tbody>
                 </v-simple-table>
             </v-col>

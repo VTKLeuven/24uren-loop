@@ -63,6 +63,11 @@
         if (laps.length !== 0) {
           items.push({name: 'Last lap', value: this.$options.filters.durationFilter(laps[0].duration)});
         }
+        
+        /* Add last lap time */
+        if (laps.length !== 0) {
+          items.push({name: 'Last Lap Start Time', value: laps[0].start_time.toLocaleTimeString()})
+        }
 
         /* Add lap count */
         items.push({name: 'Lap count', value: count});
