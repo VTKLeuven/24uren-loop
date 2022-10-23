@@ -9,7 +9,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <queue :range-from="0" :range-to="10" dense :lg="11" :md="11" :sm="11"/>
+                    <queue :range-from="0" :range-to="17" dense :lg="11" :md="11" :sm="11"/>
                 </tbody>
                 </v-simple-table>
             </v-col>
@@ -21,7 +21,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <top-runners :max="5" dense/>
+                        <top-runners :max="7" dense/>
                     </tbody>
                 </v-simple-table>
                 <v-simple-table class="tertiary">
@@ -77,7 +77,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <last-lap-list :max="5" dense />
+                        <last-lap-list :max="7" dense />
                     </tbody>
                 </v-simple-table>
             </v-col>
@@ -89,7 +89,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <most-active-runners :max="5" dense/>
+                    <most-active-runners :max="7" dense/>
                 </tbody>
                 </v-simple-table>  
             </v-col>
