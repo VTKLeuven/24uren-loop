@@ -24,6 +24,7 @@ django-cors-headers==3.4.0
 django-eventstream==3.1.0
 django-filter==2.3.0
 django-grip==3.0.0
+django-import-export
 djangorestframework==3.11.0
 filelock==3.0.12
 gripcontrol==4.0.0

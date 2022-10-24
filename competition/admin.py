@@ -4,6 +4,7 @@ import itertools
 
 from .models import *
 import csv
+from import_export.admin import ImportExportMixin
 
 admin.site.register(Group)
 admin.site.register(University)
@@ -17,7 +18,7 @@ class Echo:
 
 
 @admin.register(Runner)
-class RunnerAdmin(admin.ModelAdmin):
+class RunnerAdmin(ImportExportMixin ,admin.ModelAdmin):
     search_fields = ['first_name', 'last_name', 'identification']
 
 

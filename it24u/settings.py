@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # 'silk',
     'it24u.apps.It24uConfig',
     'competition.apps.CompetitionConfig',
+    'import_export',
 ]
 
 MIDDLEWARE = [
