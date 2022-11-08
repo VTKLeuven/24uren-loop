@@ -153,7 +153,7 @@
           } else {
             /* The lap is not yet present */
             if (update.data.duration !== null) {
-              if (this.max === null || update.data.start_time > this.laps[this.laps.length-1].start_time) {
+              if (this.max === null || this.laps.length === 0 || update.data.start_time > this.laps[this.laps.length-1].start_time) {
                 /* The lap should be added to the list */
 
                 if (this.max === this.laps.length) {
