@@ -9,7 +9,7 @@
       <v-container :class="{'py-0': dense}">
         <v-list v-show="!loading" style="overflow: hidden" :dense="dense" :color="color">
           <v-scroll-x-transition group>
-            <v-list-item v-for="runner in mostActive" :key="runner.key" class="ma-0 pa-0">
+            <v-list-item v-for="(runner, index) in mostActive" :key="runner.key" class="ma-0 pa-0">
               <slot :runner="runner">
                 <v-row justify="center">
                   <v-col cols="11">
@@ -17,7 +17,10 @@
                       <v-container :class="{'py-0': dense}">
                         <v-row justify="center">
                           <v-col cols="12">
-                            <div class="text-center text-body-2" :class="[{'py-0': dense}, textColorComp]">
+                            <div class="d-flex align-center text-body-2" :class="[{'py-0': dense}, textColorComp]">
+                              <img v-if="index === 0" src="/jerseys/geletrui.png" alt="Yellow Jersey"
+                                   class="fit-image"/>
+
                               {{ runner | fullName }} - {{ runner.lapcount }}
                             </div>
                           </v-col>
@@ -139,5 +142,10 @@
 </script>
 
 <style scoped>
-
+.fit-image {
+  height: 50px;
+  width: auto;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
 </style>
