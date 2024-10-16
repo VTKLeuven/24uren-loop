@@ -1,6 +1,6 @@
 <template>
   <span>
-    <slot name="full" :runners="runners" :loading="loading">
+    <slot name="full" :runners="filteredRunners" :loading="loading">
       <v-container v-show="loading">
         <v-row justify="center">
           <v-progress-circular indeterminate :color="textColor" />
@@ -9,7 +9,7 @@
       <v-container :class="{'py-0': dense}">
         <v-list v-show="!loading" style="overflow: hidden" :dense="dense" :color="color">
           <v-scroll-x-transition group>
-            <v-list-item v-for="runner in runners" :key="runner.key" class="ma-0 pa-0">
+            <v-list-item v-for="runner in filteredRunners" :key="runner.key" class="ma-0 pa-0">
               <slot :runner="runner">
                 <v-row justify="center">
                   <v-col cols="11">
@@ -17,7 +17,7 @@
                       <v-container :class="{'py-0': dense}">
                         <v-row justify="center">
                           <v-col cols="12">
-                            <div class="text-center text-body-2" :class="[{'py-0': dense}, textColorComp]">
+                            <div class="d-flex align-center text-body-2" :class="[{'py-0': dense}, textColorComp]">
                               {{ runner | fullName }} - {{ runner.fastest_lap.duration | durationFilter }}
                             </div>
                           </v-col>
@@ -69,6 +69,9 @@
     computed: {
       textColorComp: function() {
         return `${this.textColor}--text`;
+      },
+      filteredRunners: function() {
+        return this.runners.filter(runner => runner.fastest_lap);
       }
     },
     watch: {
@@ -115,7 +118,7 @@
           } else {
             delete update.data.runner;
             this.runners[i].fastest_lap = update.data;
-            this.runners.sort((a, b) => {return (a.fastest_lap.duration < b.fastest_lap.duration) ? -1 : 
+            this.runners.sort((a, b) => {return (a.fastest_lap.duration < b.fastest_lap.duration) ? -1 :
                                                 ((a.fastest_lap.duration > b.fastest_lap.duration) ? 1 : 0)});
           }
         } else if (this.runners[this.runners.length - 1].fastest_lap.duration > update.data.duration) {
@@ -134,7 +137,7 @@
             this.runners.splice(this.runners.length - 1, 1)
             this.runners.push(runner);
           }
-          this.runners.sort((a, b) => {return (a.fastest_lap.duration < b.fastest_lap.duration) ? -1 : 
+          this.runners.sort((a, b) => {return (a.fastest_lap.duration < b.fastest_lap.duration) ? -1 :
                                               ((a.fastest_lap.duration > b.fastest_lap.duration) ? 1 : 0)});
         }
 
