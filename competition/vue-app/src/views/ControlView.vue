@@ -69,7 +69,6 @@ export default {
       },
       onAdvanceSuccess() {
         this.alerts.startSuccess = true;
-        this.refreshActiveRunnerAndTimer()
         setTimeout(() => {
           this.alerts.startSuccess = false;
         }, 1000);
@@ -92,10 +91,6 @@ export default {
       onLapChange(lap) {
         this.start = lap !== null ? Date.parse(lap.start_time) : 0;
       },
-      refreshActiveRunnerAndTimer() {
-      this.activeRunnerKey += 1;
-      this.start = 0; // Reset the timer start
-      }
     }
 }
 </script>
