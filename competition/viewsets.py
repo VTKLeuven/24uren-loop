@@ -244,5 +244,18 @@ class RainStatusViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=500)
 
+    @action(detail=False, methods=['put'])
+    def update_status(self, request):
+        try:
+            rain_status = RainStatus.objects.first()
+            if not rain_status:
+                return Response({'error': 'Rain status not found'}, status=404)
+            rain_status.is_raining = request.data.get('is_raining', rain_status.is_raining)
+            rain_status.save()
+            serializer = RainStatusSerializer(rain_status)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
     def get_permissions(self):
         return [RestBasePermission('rainstatus', self.action) | IsOpen('rainstatus', self.action)]
