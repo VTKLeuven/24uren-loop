@@ -106,11 +106,11 @@
         <v-simple-table class="tertiary">
           <thead>
             <tr>
-              <th class="text-left text-subtitle-2 tertiary-text--text font-weight-bold">Most laps first years - White Jersey</th>
+              <th class="text-left text-subtitle-2 tertiary-text--text font-weight-bold">Most laps by firs-year students - White Jersey</th>
             </tr>
           </thead>
           <tbody>
-            <most-active-runners-first-year :max="7" dense/>
+            <top-first-years :max="7" dense/>
           </tbody>
         </v-simple-table>
       </v-col>
@@ -138,6 +138,7 @@
   import ActiveRunner from "../components/info/ActiveRunner";
   import Timer from "../components/info/LiveTimer";
   import LastLapList from "../components/lists/LastLapList";
+  import TopFirstYears from "../components/lists/TopFirstYears";
 
   export default {
     name: "StatisticsView",
@@ -149,6 +150,7 @@
       TopGroups,
       TopRunners,
       Queue,
+      TopFirstYears,
     },
     data: () => ({
       start: 0,
