@@ -107,6 +107,7 @@ class Lap(models.Model):
     ticket = models.OneToOneField('QueueTicket', blank=True, on_delete=models.PROTECT)
     start_time = models.DateTimeField(null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+    raining = models.BooleanField(default=False)
 
     class Meta:
         permissions = rest_permissions('lap') + [
@@ -117,6 +118,8 @@ class Lap(models.Model):
 
     def save(self, *args, **kwargs):
         self.__sse__ = kwargs.pop('__sse__', True)
+        if not self.id:
+            self.raining = RainStatus.objects.first().is_raining
         if self.ticket and self.ticket.ran is False:
             self.ticket.ran = True
             self.ticket.save()
