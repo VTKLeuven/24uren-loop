@@ -12,6 +12,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link :to="{name: 'queueUp'}" v-if="router_permissions.queueUp">
           <v-list-item link>
             <v-list-item-icon>
@@ -22,6 +23,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link :to="{name: 'liverunners'}" v-if="router_permissions.liverunners">
           <v-list-item link>
             <v-list-item-icon>
@@ -32,6 +34,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link :to="{name: 'queue'}" v-if="router_permissions.queue">
           <v-list-item link>
             <v-list-item-icon>
@@ -42,6 +45,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link :to="{name: 'control'}" v-if="router_permissions.control">
           <v-list-item link>
             <v-list-item-icon>
@@ -52,6 +56,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link :to="{name: 'query'}" v-if="router_permissions.query">
           <v-list-item link>
             <v-list-item-icon>
@@ -62,17 +67,22 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
-        <v-row>
-          <v-col>
-            <v-switch
-              v-model="isRaining"
-              :label="`Raining: ${isRaining ? 'Yes' : 'No'}`"
-              @change="updateRainStatus"
-              color="primary"
-              class="primary-text--text"
-            ></v-switch>
-          </v-col>
-        </v-row>
+
+        <v-container :style="{ marginLeft: '-14px', padding: '0px'}">
+          <v-list-item>
+            <v-list-item-action>
+              <v-switch
+                v-model="isRaining"
+                @change="updateRainStatus"
+                color="primary-text"
+              ></v-switch>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title class="primary-text--text text-body-1">Raining: {{isRaining}}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+      </v-container>
+
       </v-list>
     </v-navigation-drawer>
 
