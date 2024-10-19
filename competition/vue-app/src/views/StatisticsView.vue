@@ -98,7 +98,7 @@
             </tr>
           </thead>
           <tbody>
-            <polka-jersey-score :max="7" dense/>
+            <polka-dot-scoreboard :max="7" dense/>
           </tbody>
         </v-simple-table>
       </v-col>
@@ -139,6 +139,7 @@
   import Timer from "../components/info/LiveTimer";
   import LastLapList from "../components/lists/LastLapList";
   import TopFirstYears from "../components/lists/TopFirstYears";
+  import PolkaDotScoreboard from "@/components/lists/PolkaDotScoreboard.vue";
 
   export default {
     name: "StatisticsView",
@@ -151,6 +152,7 @@
       TopRunners,
       Queue,
       TopFirstYears,
+      PolkaDotScoreboard
     },
     data: () => ({
       start: 0,

@@ -1,10 +1,12 @@
 from django.db import transaction
 from django.db.models import OuterRef, Subquery, Q, Sum
 from django.db.models.functions import TruncTime
-from django.utils import timezone
+from django.utils.timezone import localtime
 from django.core.exceptions import ObjectDoesNotExist
 
 from django_eventstream import send_event
+
+from datetime import time
 
 from .models import *
 from .serializers import QueueTicketSerializer, GroupSerializer
@@ -50,6 +52,36 @@ class LapService:
         if prev_lap is not None:
             prev_lap.duration = None
             prev_lap.save(*args, **kwargs)
+
+    @classmethod
+    def get_polkadot_scoreboard(cls, *args, **kwargs):
+        scoreboard = []
+        runners = Runner.objects.all()
+        for runner in runners:
+            score = 0
+            laps = Lap.objects.filter(runner=runner)
+            for lap in laps:
+                start_time = localtime(lap.start_time).time()
+
+                if (start_time >= time(20, 0)) or (start_time < time(2, 0)):
+                    score += 1
+                elif (start_time >= time(2, 0)) and (start_time < time(4, 0)):
+                    score += 3
+                elif (start_time >= time(4, 0)) and (start_time < time(9, 0)):
+                    score += 10
+                elif (start_time >= time(9, 0)) and (start_time < time(12, 0)):
+                    score += 5
+                elif (start_time >= time(12, 0)) and (start_time < time(18, 0)):
+                    score += 1
+                elif (start_time >= time(18, 0)) and (start_time < time(20, 0)):
+                    score += 3
+
+                if lap.raining:
+                    score += 5
+            scoreboard.append(runner.first_name + ' ' + runner.last_name + " - " + str(score))
+
+        sorted_scoreboard = sorted(scoreboard, key=lambda x: int(x.split(' - ')[1]), reverse=True)
+        return sorted_scoreboard
 
 
 class QueueTicketService:

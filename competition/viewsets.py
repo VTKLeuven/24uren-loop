@@ -118,6 +118,12 @@ class LapViewSet(viewsets.ModelViewSet):
         lapcount = Lap.objects.filter(runner__id=id, duration__isnull=False).count()
         return Response({'lap_count': lapcount})
 
+    @action(detail=False, methods=['get'])
+    def polkadot_scoreboard(self, request):
+        scoreboard = LapService.get_polkadot_scoreboard()
+        scoreboard = apply_query_limit(request, scoreboard)
+        return Response(scoreboard)
+
     def get_permissions(self):
         return [RestBasePermission('lap', self.action) | IsOpen('lap', self.action)]
 

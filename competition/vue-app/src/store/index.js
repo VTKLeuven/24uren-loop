@@ -36,6 +36,7 @@ export default new Vuex.Store({
       most_active_first_year: `${API_URL}/runner/most_active_first_year`,
       lap_count: `${API_URL}/lap/lap_count`,
       top_groups: `${API_URL}/group/top_groups`,
+      polkadot_scoreboard: `${API_URL}/lap/polkadot_scoreboard`,
 
       query: {
         shift_runners_without_upcoming_shifts: `${API_URL}/shift/no_shift_after`,
