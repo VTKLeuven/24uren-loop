@@ -223,3 +223,26 @@ class CounterViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         return [RestBasePermission('counter', self.action) | IsOpen('counter', self.action)]
+
+class RainStatusViewSet(viewsets.ModelViewSet):
+    queryset = RainStatus.objects.all()
+    serializer_class = RainStatusSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    ordering_fields = '__all__'
+    filter_fields = {
+        'is_raining': ['exact'],
+    }
+
+    @action(detail=False, methods=['get'])
+    def current_status(self, request):
+        try:
+            rain_status = RainStatus.objects.first()
+            if not rain_status:
+                return Response({'error': 'Rain status not found'}, status=404)
+            serializer = RainStatusSerializer(rain_status)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+    def get_permissions(self):
+        return [RestBasePermission('rainstatus', self.action) | IsOpen('rainstatus', self.action)]

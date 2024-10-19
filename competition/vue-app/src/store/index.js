@@ -29,6 +29,7 @@ export default new Vuex.Store({
       group: `${API_URL}/group`,
       shift: `${API_URL}/shift`,
       counter: `${API_URL}/counter`,
+      rain_status: `${API_URL}/rain_status`,
 
       top_runners: `${API_URL}/runner/top_runners`,
       most_active: `${API_URL}/runner/most_active`,

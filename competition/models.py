@@ -209,3 +209,11 @@ class Counter(models.Model):
 
     def __str__(self):
         return f'{self.name} ({self.count})'
+
+class RainStatus(models.Model):
+    is_raining = models.BooleanField(default=False)
+
+    # Prevent pluralization
+    class Meta:
+        verbose_name = "Rain status"
+        verbose_name_plural = "Rain status"

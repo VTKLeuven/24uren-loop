@@ -62,6 +62,17 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+        <v-row>
+          <v-col>
+            <v-switch
+              v-model="isRaining"
+              :label="`Raining: ${isRaining ? 'Yes' : 'No'}`"
+              @change="updateRainStatus"
+              color="primary"
+              class="primary-text--text"
+            ></v-switch>
+          </v-col>
+        </v-row>
       </v-list>
     </v-navigation-drawer>
 
@@ -145,6 +156,7 @@ export default {
     authWatcher: null,
     router_permissions: {},
     datetime: new Date(),
+    isRaining: false,
   }),
   methods: {
     alert({type, msg, timeout=null}) {
@@ -207,7 +219,28 @@ export default {
       setTimeout(() => {
         this.updateDatetime();
       }, 1000);
-    }
+    },
+    async fetchRainStatus() {
+      try {
+        let resp = await this.axios.get(`${this.$store.state.urls.rain_status}/`);
+        this.isRaining = resp.data[0].is_raining;
+        } catch (e) {
+          this.$emit('error', 'Unable to get rain status');
+        }
+    },
+    async updateRainStatus() {
+        try {
+        await fetch(`${this.$store.state.urls.rain_status}/1/`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ is_raining: this.isRaining }),
+        });
+      } catch (error) {
+        console.error('Error updating rain status:', error);
+      }
+    },
   },
   async mounted() {
     /* Update the datetime */
@@ -233,6 +266,8 @@ export default {
       this.mapRouterPermissions,
       {deep: true}
     );
+
+    this.fetchRainStatus();
   },
   beforeDestroy() {
     this.$store.dispatch('close_sse');

@@ -64,3 +64,7 @@ class HappyHourAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.filter(base=False)
+
+@admin.register(RainStatus)
+class RainStatusAdmin(admin.ModelAdmin):
+    list_display = ('is_raining',)

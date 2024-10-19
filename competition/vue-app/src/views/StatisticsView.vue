@@ -42,7 +42,7 @@
         <v-simple-table class="tertiary">
           <thead>
             <tr>
-              <th class="text-left text-subtitle-2 tertiary-text--text font-weight-bold">Top runners - Green Jersey</th>
+              <th class="text-left text-subtitle-2 tertiary-text--text font-weight-bold helloworld">Top runners - Green Jersey</th>
             </tr>
           </thead>
           <tbody>
