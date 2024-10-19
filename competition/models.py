@@ -43,6 +43,7 @@ class Runner(models.Model):
     group = models.ForeignKey('Group', null=True, blank=True, on_delete=models.SET_NULL)
     test_time = models.DurationField(null=True, blank=True)
     shifts = models.ManyToManyField('Shift', blank=True)
+    first_year = models.BooleanField(null=True, blank=True)
 
     class Meta:
         permissions = rest_permissions('runner') + [

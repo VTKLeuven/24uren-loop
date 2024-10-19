@@ -33,6 +33,7 @@ export default new Vuex.Store({
 
       top_runners: `${API_URL}/runner/top_runners`,
       most_active: `${API_URL}/runner/most_active`,
+      most_active_first_year: `${API_URL}/runner/most_active_first_year`,
       lap_count: `${API_URL}/lap/lap_count`,
       top_groups: `${API_URL}/group/top_groups`,
 

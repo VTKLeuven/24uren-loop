@@ -68,6 +68,14 @@ class RunnerViewSet(viewsets.ModelViewSet):
         runners = apply_query_limit(request, runners)
         return Response(RunnerSerializer(runners, many=True, extra_fields={'lapcount': serializers.IntegerField()}).data)
 
+    @action(detail=False, methods=['get'])
+    def most_active_first_year(self, request):
+        runners = Runner.objects.filter(first_year=True, laps__duration__isnull=False).annotate(
+            lapcount=Count('laps')).order_by('-lapcount')
+        runners = apply_query_limit(request, runners)
+        return Response(
+            RunnerSerializer(runners, many=True, extra_fields={'lapcount': serializers.IntegerField()}).data)
+
     def get_permissions(self):
         return [RestBasePermission('runner', self.action) | IsOpen('runner', self.action)]
 

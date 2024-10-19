@@ -83,21 +83,20 @@
     methods: {
       async fill() {
         try {
-          let resp = await this.axios.get(`${this.$store.state.urls.most_active}/`, {
+          let resp = await this.axios.get(`${this.$store.state.urls.most_active_first_year}/`, {
             params: {
               'limit': this.max,
             }
           });
           if (this.mostActiveFirstYear.length > 0) {
             this.mostActiveFirstYear = resp.data
-              .filter(runner => runner.group === 1)
               .map(runner => {
                 let r = this.mostActiveFirstYear.find(r => runner.id === r.id);
                 runner.key = r ? r.key : this.keys++;
                 return runner;
               });
           } else {
-            this.mostActiveFirstYear = resp.data.filter(runner => runner.group === 1).map((runner) => {runner.key = this.keys++; return runner;});
+            this.mostActiveFirstYear = resp.data.map((runner) => {runner.key = this.keys++; return runner;});
           }
         } catch (e) {
           this.$emit('error', 'Unable to get most active runners');
