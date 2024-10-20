@@ -29,11 +29,14 @@ export default new Vuex.Store({
       group: `${API_URL}/group`,
       shift: `${API_URL}/shift`,
       counter: `${API_URL}/counter`,
+      rain_status: `${API_URL}/rain_status`,
 
       top_runners: `${API_URL}/runner/top_runners`,
       most_active: `${API_URL}/runner/most_active`,
+      most_active_first_year: `${API_URL}/runner/most_active_first_year`,
       lap_count: `${API_URL}/lap/lap_count`,
       top_groups: `${API_URL}/group/top_groups`,
+      polkadot_scoreboard: `${API_URL}/lap/polkadot_scoreboard`,
 
       query: {
         shift_runners_without_upcoming_shifts: `${API_URL}/shift/no_shift_after`,

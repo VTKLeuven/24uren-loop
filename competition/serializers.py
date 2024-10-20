@@ -98,3 +98,7 @@ class CounterSerializer(ModelExtraFieldSerializer):
     model = Counter
     fields = '__all__'
 
+class RainStatusSerializer(ModelExtraFieldSerializer):
+  class Meta:
+    model = RainStatus
+    fields = '__all__'

@@ -55,6 +55,9 @@
                               prepend-icon="group" error />
                     <v-select v-else label="Loading..." prepend-icon="group" disabled />
                   </v-col>
+                  <v-col cols="12">
+                    <v-checkbox v-model="form.firstYear.value" label="First-year student" />
+                  </v-col>
                 </v-row>
                 <v-btn color="primary" class="primary-text--text text-button" @click="create($event)" :disabled="!validRunner">Submit</v-btn>
               </template>
@@ -126,6 +129,9 @@
         },
         group: {
           value: null
+        },
+        firstYear: {
+          value: false
         },
 
         rules: { /* General rules not bound to a specific field */
@@ -232,7 +238,8 @@
           'first_name': this.form.firstName.value,
           'last_name': this.form.lastName.value,
           'university': this.form.university.value,
-          'identification': identification
+          'identification': identification,
+          'first_year': this.form.firstYear.value
         };
         /* If a group is selected, add it to the object */
         if (this.group) {

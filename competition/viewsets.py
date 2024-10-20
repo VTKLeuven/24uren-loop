@@ -68,6 +68,14 @@ class RunnerViewSet(viewsets.ModelViewSet):
         runners = apply_query_limit(request, runners)
         return Response(RunnerSerializer(runners, many=True, extra_fields={'lapcount': serializers.IntegerField()}).data)
 
+    @action(detail=False, methods=['get'])
+    def most_active_first_year(self, request):
+        runners = Runner.objects.filter(first_year=True, laps__duration__isnull=False).annotate(
+            lapcount=Count('laps')).order_by('-lapcount')
+        runners = apply_query_limit(request, runners)
+        return Response(
+            RunnerSerializer(runners, many=True, extra_fields={'lapcount': serializers.IntegerField()}).data)
+
     def get_permissions(self):
         return [RestBasePermission('runner', self.action) | IsOpen('runner', self.action)]
 
@@ -109,6 +117,12 @@ class LapViewSet(viewsets.ModelViewSet):
         id = request.query_params.get('id')
         lapcount = Lap.objects.filter(runner__id=id, duration__isnull=False).count()
         return Response({'lap_count': lapcount})
+
+    @action(detail=False, methods=['get'])
+    def polkadot_scoreboard(self, request):
+        scoreboard = LapService.get_polkadot_scoreboard()
+        scoreboard = apply_query_limit(request, scoreboard)
+        return Response(scoreboard)
 
     def get_permissions(self):
         return [RestBasePermission('lap', self.action) | IsOpen('lap', self.action)]
@@ -223,3 +237,39 @@ class CounterViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         return [RestBasePermission('counter', self.action) | IsOpen('counter', self.action)]
+
+class RainStatusViewSet(viewsets.ModelViewSet):
+    queryset = RainStatus.objects.all()
+    serializer_class = RainStatusSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    ordering_fields = '__all__'
+    filter_fields = {
+        'is_raining': ['exact'],
+    }
+
+    @action(detail=False, methods=['get'])
+    def current_status(self, request):
+        try:
+            rain_status = RainStatus.objects.first()
+            if not rain_status:
+                return Response({'error': 'Rain status not found'}, status=404)
+            serializer = RainStatusSerializer(rain_status)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+    @action(detail=False, methods=['put'])
+    def update_status(self, request):
+        try:
+            rain_status = RainStatus.objects.first()
+            if not rain_status:
+                return Response({'error': 'Rain status not found'}, status=404)
+            rain_status.is_raining = request.data.get('is_raining', rain_status.is_raining)
+            rain_status.save()
+            serializer = RainStatusSerializer(rain_status)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+
+    def get_permissions(self):
+        return [RestBasePermission('rainstatus', self.action) | IsOpen('rainstatus', self.action)]

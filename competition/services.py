@@ -1,10 +1,12 @@
 from django.db import transaction
 from django.db.models import OuterRef, Subquery, Q, Sum
 from django.db.models.functions import TruncTime
-from django.utils import timezone
+from django.utils.timezone import localtime
 from django.core.exceptions import ObjectDoesNotExist
 
 from django_eventstream import send_event
+
+from datetime import time
 
 from .models import *
 from .serializers import QueueTicketSerializer, GroupSerializer
@@ -50,6 +52,36 @@ class LapService:
         if prev_lap is not None:
             prev_lap.duration = None
             prev_lap.save(*args, **kwargs)
+
+    @classmethod
+    def get_polkadot_scoreboard(cls, *args, **kwargs):
+        scoreboard = []
+        runners = Runner.objects.all()
+        for runner in runners:
+            score = 0
+            laps = Lap.objects.filter(runner=runner)
+            for lap in laps:
+                start_time = localtime(lap.start_time).time()
+
+                if (start_time >= time(20, 0)) or (start_time < time(2, 0)):
+                    score += 1
+                elif (start_time >= time(2, 0)) and (start_time < time(4, 0)):
+                    score += 3
+                elif (start_time >= time(4, 0)) and (start_time < time(9, 0)):
+                    score += 10
+                elif (start_time >= time(9, 0)) and (start_time < time(12, 0)):
+                    score += 5
+                elif (start_time >= time(12, 0)) and (start_time < time(18, 0)):
+                    score += 1
+                elif (start_time >= time(18, 0)) and (start_time < time(20, 0)):
+                    score += 3
+
+                if lap.raining:
+                    score += 5
+            scoreboard.append(runner.first_name + ' ' + runner.last_name + " - " + str(score))
+
+        sorted_scoreboard = sorted(scoreboard, key=lambda x: int(x.split(' - ')[1]), reverse=True)
+        return sorted_scoreboard
 
 
 class QueueTicketService:
@@ -157,24 +189,36 @@ class GroupService:
     @classmethod
     def update_score(cls, group, *args, **kwargs):
         members = Runner.objects.filter(group=group)
-        base_pts = Criterium.objects\
-                 .filter(Q(upper_limit__gte=OuterRef('duration')) | Q(base=True))\
-                 .order_by('base', 'upper_limit')\
-                 .values('score')[:1]
-        multiplier = HappyHour.objects\
-                  .filter(Q(group=group, start_time__lte=OuterRef('start_time'), end_time__gte=OuterRef('start_time')) | Q(base=True))\
-                  .order_by('base', '-start_time')\
-                  .values('multiplier')[:1]
-        laps = Lap.objects\
-            .filter(runner__in=members, duration__isnull=False)\
-            .annotate(pts=Subquery(base_pts)*Subquery(multiplier))
-        total = laps.aggregate(Sum('pts'))['pts__sum']
-        pts = total if total is not None else 0
+        total_score = 0
+
+        for member in members:
+            score = 0
+            laps = Lap.objects.filter(runner=member)
+            for lap in laps:
+                start_time = localtime(lap.start_time).time()
+
+                if (start_time >= time(20, 0)) or (start_time < time(2, 0)):
+                    score += 1
+                elif (start_time >= time(2, 0)) and (start_time < time(4, 0)):
+                    score += 3
+                elif (start_time >= time(4, 0)) and (start_time < time(9, 0)):
+                    score += 10
+                elif (start_time >= time(9, 0)) and (start_time < time(12, 0)):
+                    score += 5
+                elif (start_time >= time(12, 0)) and (start_time < time(18, 0)):
+                    score += 1
+                elif (start_time >= time(18, 0)) and (start_time < time(20, 0)):
+                    score += 3
+
+                if lap.raining:
+                    score += 5
+
+            total_score += score
 
         __sse__ = kwargs.get('__sse__', True)
         kwargs['__sse__'] = False
 
-        group.score = pts
+        group.score = total_score
         group.save(*args, **kwargs)
 
         if __sse__:

@@ -6,7 +6,7 @@ now = timezone.now()
 
 from datetime import timedelta
 
-from competition.models import University, Criterium, HappyHour, Counter
+from competition.models import University, Criterium, HappyHour, Counter, RainStatus
 
 
 class Command(BaseCommand):
@@ -22,6 +22,7 @@ class Command(BaseCommand):
 
     Criterium.objects.create(base=True, score=0, upper_limit=timedelta())
     HappyHour.objects.create(base=True, multiplier=1, name='Base', start_time=timezone.now(), end_time=timezone.now())
+    RainStatus.objects.create(is_raining=False)
 
     Counter.objects.create(name='queue_op', count=0)
     print('Competition initialised')
