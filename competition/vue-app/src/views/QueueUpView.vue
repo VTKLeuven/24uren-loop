@@ -54,6 +54,11 @@
                     <v-select v-else-if="groupChoices && groupChoices === 'error'" label="An error occurred"
                               prepend-icon="group" error />
                     <v-select v-else label="Loading..." prepend-icon="group" disabled />
+                    <v-text-field v-model="newGroupName" label="New Group Name" placeholder="Enter group name" />
+                    <v-btn color="primary" class="primary-text--text text-button" @click="createNewGroup">Create New Group</v-btn>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-checkbox v-model="form.firstYear.value" label="First-year student" />
                   </v-col>
                 </v-row>
                 <v-btn color="primary" class="primary-text--text text-button" @click="create($event)" :disabled="!validRunner">Submit</v-btn>
@@ -83,7 +88,6 @@
     </v-row>
   </v-container>
 </template>
-
 
 <script>
   import RunnerQuickInfo from "../components/info/RunnerQuickInfo";
@@ -127,6 +131,9 @@
         group: {
           value: null
         },
+        firstYear: {
+          value: false
+        },
 
         rules: { /* General rules not bound to a specific field */
           name: [
@@ -136,6 +143,7 @@
           ],
         }
       },
+      newGroupName: '' /* New group name */
     }),
     methods: {
       submit: function(event) {
@@ -232,7 +240,8 @@
           'first_name': this.form.firstName.value,
           'last_name': this.form.lastName.value,
           'university': this.form.university.value,
-          'identification': identification
+          'identification': identification,
+          'first_year': this.form.firstYear.value
         };
         /* If a group is selected, add it to the object */
         if (this.group) {
@@ -254,6 +263,20 @@
           /* Activate the error alert */
           this.alerts.error = true;
         })
+      },
+      createNewGroup: function() {
+        /* Post the new group to the server */
+        this.axios.post(`${this.$store.state.urls.group}/`, { name: this.newGroupName })
+          .then(response => {
+            /* Handle success, e.g., update the UI or notify the user */
+            console.log('Group created:', response.data);
+            /* Optionally, you can add the new group to the groupChoices */
+            this.groupChoices.push({ text: response.data.name, value: response.data.id });
+          })
+          .catch(error => {
+            /* Handle error */
+            console.error('Error creating group:', error);
+          });
       },
       disableAlerts: function() {
         this.alerts.success = false;
