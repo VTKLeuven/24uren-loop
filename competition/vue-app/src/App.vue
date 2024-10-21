@@ -68,7 +68,18 @@
           </v-list-item>
         </router-link>
 
-        <v-container :style="{ marginLeft: '-14px', padding: '0px'}">
+        <router-link :to="{name: 'group'}" v-if="router_permissions.queueUp">
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon class="primary-text--text">people</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="primary-text--text text-body-1">Groups</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
+
+        <v-container :style="{ marginLeft: '-14px', padding: '0px'}" >
           <v-list-item>
             <v-list-item-action>
               <v-switch
@@ -231,8 +242,10 @@ export default {
       }, 1000);
     },
     async fetchRainStatus() {
+      console.log('Fetching rain status');
       try {
         let resp = await this.axios.get(`${this.$store.state.urls.rain_status}/current_status`);
+        console.log(resp);
         this.isRaining = resp.data.is_raining;
         } catch (e) {
           this.$emit('error', 'Unable to get rain status');
