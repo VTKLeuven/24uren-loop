@@ -40,7 +40,7 @@
                     <active-runner @change="onLapChange"/>
                   </v-card-title>
                   <v-card-subtitle class="text-center text-h6 text-md-h5 tertiary-text--text text--lighten-2 base-font">Current runner</v-card-subtitle>
-                  <v-card-text class="text-center text-h4 text-md-h3 tertiary-text--text base-font">
+                  <v-card-text class="text-center text-h3 text-md-h3 tertiary-text--text base-font">
                     <timer :start="start"/>
                   </v-card-text>
                 </v-card>
@@ -102,4 +102,16 @@
 
 .base-font
   font-family: $body-font-family !important
+
+.v-list-item, .v-container, .v-row, .v-col, .v-card
+  margin: 0 !important
+  padding: 0 !important
+
+.v-list-item
+  margin-bottom: 0 !important
+  margin-top: 10px !important  // Adjust this value as needed
+
+.v-list-item__content, .v-card__actions, .v-card__text, .v-card__title, .v-card__subtitle
+  margin: 0 !important
+  padding: 0 !important
 </style>
