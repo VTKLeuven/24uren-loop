@@ -65,6 +65,17 @@
       </v-list>
     </v-navigation-drawer>
 
+    <router-link :to="{name: 'group'}" v-if="router_permissions.queueUp">
+      <v-list-item link>
+        <v-list-item-icon>
+          <v-icon class="primary-text--text">people</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title class="primary-text--text text-body-1">Groups</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </router-link>
+
     <v-app-bar app color="primary">
       <v-app-bar-nav-icon class="primary-text--text" @click.stop="drawer = !drawer" />
       <router-link to="/index">

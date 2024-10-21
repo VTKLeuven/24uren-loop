@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store'
+import GroupView from "@/views/GroupView.vue";
 
 Vue.use(VueRouter);
 
@@ -66,6 +67,17 @@ const routes = [
     meta: {
       hasPermission: () => {return store.getters.is_admin},
       title: `${process.env.VUE_APP_TITLE} - Query`
+    }
+  },
+  {
+    path: '/group',
+    name: 'group',
+    component: GroupView,
+    meta: {
+      hasPermission: () => {
+        // Define the logic to check if the user has the necessary permissions
+        return true; // Replace with actual permission check
+      },
     }
   }
 ];
