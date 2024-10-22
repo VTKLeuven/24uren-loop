@@ -142,9 +142,16 @@ class Group(models.Model):
             ('rest_top_groups_group', 'Can view top groups in REST')
         ]
 
+    def update_score(self):
+        total_score = 0
+        for runner in self.runner_set.all():
+            total_score += runner.laps.count()
+        self.score = total_score
+
     def save(self, *args, **kwargs):
         self.meta = kwargs.pop('meta', None)
         self.__sse__ = kwargs.pop('__sse__', True)
+        self.update_score()
         return super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):

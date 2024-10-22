@@ -235,8 +235,8 @@
           'identification': identification
         };
         /* If a group is selected, add it to the object */
-        if (this.group) {
-          runnerObject.group = this.form.group.value
+        if (this.form.group.value) {
+          runnerObject.group = this.form.group.value;
         }
 
         /* Post the new runner to the server */
