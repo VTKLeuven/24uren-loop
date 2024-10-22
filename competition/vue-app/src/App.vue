@@ -12,6 +12,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link :to="{name: 'queueUp'}" v-if="router_permissions.queueUp">
           <v-list-item link>
             <v-list-item-icon>
@@ -22,6 +23,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link :to="{name: 'liverunners'}" v-if="router_permissions.liverunners">
           <v-list-item link>
             <v-list-item-icon>
@@ -32,6 +34,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link :to="{name: 'queue'}" v-if="router_permissions.queue">
           <v-list-item link>
             <v-list-item-icon>
@@ -42,6 +45,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link :to="{name: 'control'}" v-if="router_permissions.control">
           <v-list-item link>
             <v-list-item-icon>
@@ -52,6 +56,7 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
         <router-link :to="{name: 'query'}" v-if="router_permissions.query">
           <v-list-item link>
             <v-list-item-icon>
@@ -62,6 +67,33 @@
             </v-list-item-content>
           </v-list-item>
         </router-link>
+
+        <router-link :to="{name: 'group'}" v-if="router_permissions.queueUp">
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon class="primary-text--text">people</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="primary-text--text text-body-1">Groups</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </router-link>
+
+        <v-container :style="{ marginLeft: '-14px', padding: '0px'}" >
+          <v-list-item>
+            <v-list-item-action>
+              <v-switch
+                v-model="isRaining"
+                @change="updateRainStatus"
+                color="primary-text"
+              ></v-switch>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title class="primary-text--text text-body-1">Raining: {{isRaining}}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+      </v-container>
+
       </v-list>
     </v-navigation-drawer>
 
@@ -145,6 +177,7 @@ export default {
     authWatcher: null,
     router_permissions: {},
     datetime: new Date(),
+    isRaining: false,
   }),
   methods: {
     alert({type, msg, timeout=null}) {
@@ -207,7 +240,26 @@ export default {
       setTimeout(() => {
         this.updateDatetime();
       }, 1000);
-    }
+    },
+    async fetchRainStatus() {
+      console.log('Fetching rain status');
+      try {
+        let resp = await this.axios.get(`${this.$store.state.urls.rain_status}/current_status`);
+        console.log(resp);
+        this.isRaining = resp.data.is_raining;
+        } catch (e) {
+          this.$emit('error', 'Unable to get rain status');
+        }
+    },
+    async updateRainStatus() {
+      try {
+        await this.axios.put(`${this.$store.state.urls.rain_status}/update_status/`, {
+          is_raining: this.isRaining,
+        });
+      } catch (error) {
+        console.error('Error updating rain status:', error);
+      }
+    },
   },
   async mounted() {
     /* Update the datetime */
@@ -233,6 +285,8 @@ export default {
       this.mapRouterPermissions,
       {deep: true}
     );
+
+    this.fetchRainStatus();
   },
   beforeDestroy() {
     this.$store.dispatch('close_sse');

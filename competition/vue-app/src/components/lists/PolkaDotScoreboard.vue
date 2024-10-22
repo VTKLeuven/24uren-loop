@@ -1,6 +1,6 @@
 <template>
   <span>
-    <slot name="full" :mostActive="mostActive" :loading="loading">
+    <slot name="full" :polkaDotScoreboard="polkaDotScoreboard" :loading="loading">
       <v-container v-show="loading">
         <v-row justify="center">
           <v-progress-circular indeterminate :color="textColor" />
@@ -9,7 +9,7 @@
       <v-container :class="{'py-0': dense}">
         <v-list v-show="!loading" style="overflow: hidden" :dense="dense" :color="color">
           <v-scroll-x-transition group>
-            <v-list-item v-for="(runner, index) in mostActive" :key="runner.key" class="ma-0 pa-0">
+            <v-list-item v-for="(runner, index) in polkaDotScoreboard" :key="index" class="ma-0 pa-0">
               <slot :runner="runner">
                 <v-row justify="center">
                   <v-col cols="11">
@@ -18,10 +18,9 @@
                         <v-row justify="center">
                           <v-col cols="12">
                             <div class="d-flex align-center text-body-2" :class="[{'py-0': dense}, textColorComp]">
-                              <img v-if="index === 0" src="/jerseys/geletrui.png" alt="Yellow Jersey"
+                              <img v-if="index === 0" src="/jerseys/bolletjestrui.png" alt="Polka Dot Jersey"
                                    class="fit-image"/>
-
-                              {{ runner | fullName }} - {{ runner.lapcount }}
+                              {{ runner }}
                             </div>
                           </v-col>
                         </v-row>
@@ -40,7 +39,7 @@
 
 <script>
   export default {
-    name: "MostActiveRunners",
+    name: "PolkaDotScoreboard",
     events: ['error'],
     props: {
       max: {
@@ -65,14 +64,14 @@
       }
     },
     data: () => ({
-      mostActive: [],
+      polkaDotScoreboard: [],
       keys: 0,
       loading: true,
     }),
     computed: {
       textColorComp: function() {
         return `${this.textColor}--text`;
-      }
+      },
     },
     watch: {
       max: function() {
@@ -82,55 +81,35 @@
     methods: {
       async fill() {
         try {
-          let resp = await this.axios.get(`${this.$store.state.urls.most_active}/`, {
+          let resp = await this.axios.get(`${this.$store.state.urls.polkadot_scoreboard}/`, {
             params: {
               'limit': this.max,
             }
           });
-
-          if (this.mostActive.length > 0) {
-            this.mostActive = resp.data.map((runner) => {
-              let r = this.mostActive.find((r) => {return runner.id === r.id});
-              runner.key = r ? r.key : this.keys++;
-              return runner;
-            });
-          } else {
-            this.mostActive = resp.data.map((runner) => {runner.key = this.keys++; return runner;});
-          }
+          this.polkaDotScoreboard = resp.data
+          console.log(this.polkaDotScoreboard)
         } catch (e) {
-          this.$emit('error', 'Unable to get most active runners');
+          this.$emit('error', 'Unable to get polka dot scoreboard');
         }
       },
       onLapUpdate() {
-        /* There is no distinction between object creation and update */
-        /* Unable to tell if we need to add one to the count */
         this.fill();
       },
       onLapDelete(resp) {
         let update = JSON.parse(resp.data);
-
-        /* Find the runner whose lap got deleted */
-        let i = this.mostActive.findIndex((runner) => {return update.data.runner.id === runner.id;});
-
-        /* Ignore if not from top runners */
+        let i = this.polkaDotScoreboard.findIndex((runner) => {return update.data.runner.id === runner.id;});
         if (i === -1) return;
-
-        /* If the last runner loses a lap */
-        if (i === this.mostActive.length - 1) {
-          /* Refresh data (TODO: only fetch last one?)*/
+        if (i === this.polkaDotScoreboard.length - 1) {
           this.fill();
         } else {
-          /* Remove one from their lapcount */
-          this.mostActive[i].runner.lapcount--;
-          /* Re-sort the array */
-          this.mostActive.sort((a, b) => a.runner.lapcount - b.runner.lapcount);
+          this.polkaDotScoreboard[i].runner.lapcount--;
+          this.polkaDotScoreboard.sort((a, b) => a.runner.lapcount - b.runner.lapcount);
         }
       }
     },
     async mounted() {
       await this.fill();
       this.loading = false;
-
       this.$store.dispatch('subscribe_sse', {event: 'lap_update', handler: this.onLapUpdate});
       this.$store.dispatch('subscribe_sse', {event: 'lap_delete', handler: this.onLapDelete});
     },

@@ -43,6 +43,7 @@ class Runner(models.Model):
     group = models.ForeignKey('Group', null=True, blank=True, on_delete=models.SET_NULL)
     test_time = models.DurationField(null=True, blank=True)
     shifts = models.ManyToManyField('Shift', blank=True)
+    first_year = models.BooleanField(null=True, blank=True)
 
     class Meta:
         permissions = rest_permissions('runner') + [
@@ -106,6 +107,7 @@ class Lap(models.Model):
     ticket = models.OneToOneField('QueueTicket', blank=True, on_delete=models.PROTECT)
     start_time = models.DateTimeField(null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+    raining = models.BooleanField(default=False)
 
     class Meta:
         permissions = rest_permissions('lap') + [
@@ -116,6 +118,8 @@ class Lap(models.Model):
 
     def save(self, *args, **kwargs):
         self.__sse__ = kwargs.pop('__sse__', True)
+        if not self.id:
+            self.raining = RainStatus.objects.first().is_raining
         if self.ticket and self.ticket.ran is False:
             self.ticket.ran = True
             self.ticket.save()
@@ -209,3 +213,11 @@ class Counter(models.Model):
 
     def __str__(self):
         return f'{self.name} ({self.count})'
+
+class RainStatus(models.Model):
+    is_raining = models.BooleanField(default=False)
+
+    # Prevent pluralization
+    class Meta:
+        verbose_name = "Rain status"
+        verbose_name_plural = "Rain status"

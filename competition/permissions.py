@@ -22,6 +22,10 @@ VUE_VIEWS = {
         'open': False,
         'perms': ['advance_lap', 'reverse_lap', 'list_lap'],
     },
+    'group': {
+        'open': False,
+        'perms': ['create_group', 'delete_group'],
+    },
 }
 
 OPEN_PERMISSIONS = {}
